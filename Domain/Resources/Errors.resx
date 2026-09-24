@@ -32,6 +32,8 @@
   <data name="FileResultUnavailable" xml:space="preserve"><value>The result for file {0} is not available yet.</value></data>
   <data name="InvalidFileTransition" xml:space="preserve"><value>The file cannot be changed in its current state.</value></data>
   <data name="UnsupportedFileFormat" xml:space="preserve"><value>The file format is not supported: {0}.</value></data>
+  <data name="UnsupportedFileContent" xml:space="preserve"><value>The file must contain supported UTF-8 text, not image, video, audio or other binary data.</value></data>
+  <data name="UnsupportedMediaTypeTitle" xml:space="preserve"><value>Unsupported file type</value></data>
   <data name="InvalidFileContent" xml:space="preserve"><value>The file content is invalid.</value></data>
   <data name="MissingFileContent" xml:space="preserve"><value>The original file is missing from storage.</value></data>
   <data name="FileProcessingFailed" xml:space="preserve"><value>The file could not be processed.</value></data>

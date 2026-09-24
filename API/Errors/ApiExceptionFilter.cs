@@ -15,6 +15,7 @@ public sealed class ApiExceptionFilter : IExceptionFilter
         var status = exception switch
         {
             FileTooLargeException => StatusCodes.Status413PayloadTooLarge,
+            UnsupportedFileException => StatusCodes.Status415UnsupportedMediaType,
             ArgumentException => StatusCodes.Status400BadRequest,
             KeyNotFoundException => StatusCodes.Status404NotFound,
             InvalidOperationException => StatusCodes.Status409Conflict,
@@ -32,6 +33,7 @@ public sealed class ApiExceptionFilter : IExceptionFilter
             StatusCodes.Status400BadRequest => ErrorCode.BadRequestTitle,
             StatusCodes.Status404NotFound => ErrorCode.NotFoundTitle,
             StatusCodes.Status413PayloadTooLarge => ErrorCode.PayloadTooLargeTitle,
+            StatusCodes.Status415UnsupportedMediaType => ErrorCode.UnsupportedMediaTypeTitle,
             _ => ErrorCode.ConflictTitle
         }, language);
 

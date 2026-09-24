@@ -5,7 +5,8 @@ using Domain.Resources;
 
 namespace Application.Files;
 
-public sealed class FileService(IFileRepository repository, IFileStorage storage, IFileWorkQueue queue) : IFileService
+public sealed class FileService(IFileRepository repository, IFileStorage storage, IFileWorkQueue queue,
+    IFileUploadValidator validator) : IFileService
 {
     public const int MaxFileSizeMb = 50;
     public const long MaxFileSizeBytes = MaxFileSizeMb * 1024L * 1024L;
@@ -16,6 +17,7 @@ public sealed class FileService(IFileRepository repository, IFileStorage storage
             throw new FileTooLargeException(ErrorMessages.Get(ErrorCode.FileTooLarge, language, MaxFileSizeMb));
 
         var safeName = Path.GetFileName((fileName ?? string.Empty).Replace('\\', '/'));
+        validator.ValidateMetadata(safeName, contentType, language);
         var file = new StoredFile(Guid.NewGuid(), safeName,
             string.IsNullOrWhiteSpace(contentType) ? "application/octet-stream" : contentType,
             size, language);
@@ -23,6 +25,8 @@ public sealed class FileService(IFileRepository repository, IFileStorage storage
         await storage.SaveAsync(file.Id, content, cancellationToken);
         try
         {
+            await using var storedContent = await storage.OpenReadAsync(file.Id, cancellationToken);
+            await validator.ValidateContentAsync(storedContent, language, cancellationToken);
             await repository.AddAsync(file, cancellationToken);
             await repository.SaveChangesAsync(cancellationToken);
         }

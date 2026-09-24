@@ -28,6 +28,7 @@ public static class DependencyInjection
         services.AddScoped<IImportJobService, ImportJobService>();
         services.AddScoped<IOrderService, OrderService>();
         services.AddScoped<IFileService, FileService>();
+        services.AddScoped<IFileUploadValidator, FileUploadValidator>();
         services.AddScoped<IFileAnalyzer, FileAnalyzer>();
         services.AddScoped<FileProcessingService>();
         services.AddScoped<IHealthService, HealthService>();

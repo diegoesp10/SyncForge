@@ -30,6 +30,8 @@ public enum ErrorCode
     FileResultUnavailable,
     InvalidFileTransition,
     UnsupportedFileFormat,
+    UnsupportedFileContent,
+    UnsupportedMediaTypeTitle,
     InvalidFileContent,
     MissingFileContent,
     FileProcessingFailed,
