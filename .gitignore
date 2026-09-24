@@ -399,6 +399,7 @@ MSBuild_Logs/
 healthchecksdb
 
 # SyncForge local tooling and development data
+API/data/
 .dotnet-cli/
 .env.*
 !.env.example

@@ -1,19 +1,26 @@
 using API.Errors;
 using Application;
+using Application.Files;
 using Domain.Resources;
 using Infrastructure;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 namespace API;
 
-public sealed class Startup(IConfiguration configuration)
+public sealed class Startup(IConfiguration configuration, IWebHostEnvironment environment)
 {
     public void ConfigureServices(IServiceCollection services)
     {
         var connectionString = configuration.GetConnectionString("SyncForge");
 
         services.AddApplication();
-        services.AddInfrastructure(connectionString ?? string.Empty, "en");
+        var storagePath = configuration["FileStorage:Path"] ?? "data/uploads";
+        var storageRoot = Path.IsPathRooted(storagePath)
+            ? storagePath
+            : Path.Combine(environment.ContentRootPath, storagePath);
+        services.AddInfrastructure(connectionString ?? string.Empty, "en", storageRoot);
         services.AddControllers(options => options.Filters.Add<ApiExceptionFilter>());
         services.Configure<ApiBehaviorOptions>(options =>
         {
@@ -29,6 +36,10 @@ public sealed class Startup(IConfiguration configuration)
             };
         });
         services.AddOpenApi();
+        services.Configure<FormOptions>(options =>
+            options.MultipartBodyLengthLimit = FileService.MaxFileSizeBytes + 1024 * 1024);
+        services.Configure<KestrelServerOptions>(options =>
+            options.Limits.MaxRequestBodySize = FileService.MaxFileSizeBytes + 1024 * 1024);
     }
 
     public void Configure(WebApplication app)

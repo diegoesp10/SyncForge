@@ -1,4 +1,5 @@
 using Domain.Resources;
+using Application.Files;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Data.SqlClient;
@@ -13,6 +14,7 @@ public sealed class ApiExceptionFilter : IExceptionFilter
         var exception = context.Exception;
         var status = exception switch
         {
+            FileTooLargeException => StatusCodes.Status413PayloadTooLarge,
             ArgumentException => StatusCodes.Status400BadRequest,
             KeyNotFoundException => StatusCodes.Status404NotFound,
             InvalidOperationException => StatusCodes.Status409Conflict,
@@ -29,6 +31,7 @@ public sealed class ApiExceptionFilter : IExceptionFilter
         {
             StatusCodes.Status400BadRequest => ErrorCode.BadRequestTitle,
             StatusCodes.Status404NotFound => ErrorCode.NotFoundTitle,
+            StatusCodes.Status413PayloadTooLarge => ErrorCode.PayloadTooLargeTitle,
             _ => ErrorCode.ConflictTitle
         }, language);
 

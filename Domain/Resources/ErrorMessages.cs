@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Resources;
 using Domain.Imports.Enums;
+using Domain.Files;
 
 namespace Domain.Resources;
 
@@ -35,6 +36,16 @@ public static class ErrorMessages
             ImportFailureCode.ProcessingFailed => ErrorCode.FailureProcessingFailed,
             _ => throw new ArgumentOutOfRangeException(nameof(failureCode), Get(ErrorCode.InvalidFailureCode, language))
         }, language);
+
+    public static string FileFailure(FileFailureCode failureCode, string fileName, string? language) =>
+        failureCode switch
+        {
+            FileFailureCode.UnsupportedFormat => Get(ErrorCode.UnsupportedFileFormat, language, Path.GetExtension(fileName)),
+            FileFailureCode.InvalidContent => Get(ErrorCode.InvalidFileContent, language),
+            FileFailureCode.MissingContent => Get(ErrorCode.MissingFileContent, language),
+            FileFailureCode.ProcessingFailed => Get(ErrorCode.FileProcessingFailed, language),
+            _ => throw new ArgumentOutOfRangeException(nameof(failureCode), Get(ErrorCode.InvalidFailureCode, language))
+        };
 
     private static CultureInfo CultureFor(string? language) =>
         language?.StartsWith("es", StringComparison.OrdinalIgnoreCase) == true

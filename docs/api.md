@@ -1,11 +1,18 @@
 # API HTTP
 
-La API usa los handlers de `Application`; estos acceden a SQL Server mediante los repositorios de `Infrastructure`. Desde la raíz del repositorio puedes iniciarla con `dotnet run --project API/API.csproj --launch-profile http`. La conexión de desarrollo está en `API/appsettings.Development.json`, bajo `ConnectionStrings:SyncForge`, y usa autenticación de Windows. Para otro entorno, configura esa misma clave o la variable estándar `ConnectionStrings__SyncForge`.
+Los controladores llaman a los servicios de `Application`; estos coordinan los handlers, que acceden a SQL Server mediante los repositorios de `Infrastructure`. Desde la raíz del repositorio puedes iniciar la API con `dotnet run --project API/API.csproj --launch-profile http`. La conexión de desarrollo está en `API/appsettings.Development.json`, bajo `ConnectionStrings:SyncForge`, y usa autenticación de Windows. Para otro entorno, configura esa misma clave o la variable estándar `ConnectionStrings__SyncForge`.
 
 Todas las rutas admiten `?language=es` o `?language=en`. También se acepta `Accept-Language`; el parámetro de consulta tiene prioridad. Si no se indica idioma, se usa inglés. Los errores se devuelven como `ProblemDetails` con mensajes de los recursos localizados.
 
 | Método | Ruta | Acción |
 | --- | --- | --- |
+| `GET` | `/api/health` | Comprobar la conexión con SQL Server y obtener la versión |
+| `POST` | `/api/files` | Subir un archivo multipart en el campo `file` (máximo 50 MB) |
+| `GET` | `/api/files` | Listar archivos del más reciente al más antiguo |
+| `GET` | `/api/files/{id}` | Consultar estado y metadatos de un archivo |
+| `GET` | `/api/files/{id}/result` | Obtener el resumen y la vista previa cuando haya terminado |
+| `POST` | `/api/files/{id}/reprocess` | Volver a procesar un archivo completado o fallido |
+| `DELETE` | `/api/files/{id}` | Borrar los metadatos y el archivo original |
 | `POST` | `/api/import-jobs` | Crear un trabajo pendiente |
 | `GET` | `/api/import-jobs?skip=0&take=50` | Listar trabajos |
 | `GET` | `/api/import-jobs/{id}` | Consultar trabajo e intentos |
@@ -18,4 +25,6 @@ Todas las rutas admiten `?language=es` o `?language=en`. También se acepta `Acc
 | `GET` | `/api/orders/by-source?sourceSystem={sourceSystem}&externalId={externalId}` | Consultar por identidad de origen |
 | `GET` | `/api/orders?importJobId={id}&skip=0&take=50` | Listar pedidos de un trabajo |
 
-El flujo actual es crear el trabajo, iniciarlo, guardar los pedidos y completarlo o marcarlo como fallido. `StoredFileKey` es la referencia al archivo original; la API todavía no recibe ni procesa archivos automáticamente. El archivo [Requests.http](../API/Requests.http) contiene ejemplos ejecutables; cambia `jobId` y `orderId` por los identificadores devueltos al crear los recursos.
+El flujo de archivos responde al contrato de `SyncForge Front/API_CONTRACT.md`. La API guarda el original en `API/data/uploads` y sus metadatos, estado y resultado en SQL Server. Un trabajador en segundo plano procesa CSV, TSV, JSON, TXT, LOG, XML y MD; entrega hasta 200 filas de tabla o una vista previa limitada de texto/JSON. Los demás formatos, incluido XLSX, quedan en estado `Failed` con un error localizado. Un JSON inválido se muestra como texto con una advertencia localizada. Si se reinicia la API, los archivos pendientes o interrumpidos vuelven a la cola.
+
+El flujo de pedidos sigue siendo independiente: crear un trabajo, iniciarlo, guardar los pedidos y completarlo o marcarlo como fallido. `StoredFileKey` de los trabajos de importación todavía no se vincula automáticamente con `/api/files`. El archivo [Requests.http](../API/Requests.http) contiene ejemplos ejecutables; cambia los identificadores por los devueltos al crear los recursos.

@@ -25,6 +25,17 @@
   <data name="OrderAlreadyExists" xml:space="preserve"><value>El pedido '{0}' ya existe para el origen '{1}'.</value></data>
   <data name="SourceSystemMismatch" xml:space="preserve"><value>El sistema de origen del pedido debe coincidir con el de su trabajo de importación.</value></data>
   <data name="ResourceConflict" xml:space="preserve"><value>La operación entra en conflicto con datos existentes.</value></data>
+  <data name="EmptyFile" xml:space="preserve"><value>El archivo está vacío.</value></data>
+  <data name="FileTooLarge" xml:space="preserve"><value>El archivo supera el límite de {0} MB.</value></data>
+  <data name="PayloadTooLargeTitle" xml:space="preserve"><value>Archivo demasiado grande</value></data>
+  <data name="FileNotFound" xml:space="preserve"><value>No se encontró el archivo {0}.</value></data>
+  <data name="FileResultUnavailable" xml:space="preserve"><value>El resultado del archivo {0} todavía no está disponible.</value></data>
+  <data name="InvalidFileTransition" xml:space="preserve"><value>No se puede modificar el archivo en su estado actual.</value></data>
+  <data name="UnsupportedFileFormat" xml:space="preserve"><value>El formato del archivo no es compatible: {0}.</value></data>
+  <data name="InvalidFileContent" xml:space="preserve"><value>El contenido del archivo no es válido.</value></data>
+  <data name="MissingFileContent" xml:space="preserve"><value>Falta el archivo original en el almacenamiento.</value></data>
+  <data name="FileProcessingFailed" xml:space="preserve"><value>No se ha podido procesar el archivo.</value></data>
+  <data name="InvalidJsonPreviewWarning" xml:space="preserve"><value>JSON no válido: se muestra como texto.</value></data>
   <data name="StatusPending" xml:space="preserve"><value>pendiente</value></data>
   <data name="StatusProcessing" xml:space="preserve"><value>en proceso</value></data>
   <data name="StatusCompleted" xml:space="preserve"><value>completado</value></data>

@@ -1,4 +1,5 @@
 using Domain.Imports;
+using Domain.Files;
 using Domain.Orders;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,6 +10,7 @@ public sealed class SyncForgeDbContext(DbContextOptions<SyncForgeDbContext> opti
     public DbSet<ImportJob> ImportJobs => Set<ImportJob>();
     public DbSet<ImportAttempt> ImportAttempts => Set<ImportAttempt>();
     public DbSet<Order> Orders => Set<Order>();
+    public DbSet<StoredFile> StoredFiles => Set<StoredFile>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

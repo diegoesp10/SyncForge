@@ -25,6 +25,17 @@
   <data name="OrderAlreadyExists" xml:space="preserve"><value>Order '{0}' already exists for source '{1}'.</value></data>
   <data name="SourceSystemMismatch" xml:space="preserve"><value>The order source system must match its import job.</value></data>
   <data name="ResourceConflict" xml:space="preserve"><value>The operation conflicts with existing data.</value></data>
+  <data name="EmptyFile" xml:space="preserve"><value>The file is empty.</value></data>
+  <data name="FileTooLarge" xml:space="preserve"><value>The file exceeds the {0} MB limit.</value></data>
+  <data name="PayloadTooLargeTitle" xml:space="preserve"><value>File too large</value></data>
+  <data name="FileNotFound" xml:space="preserve"><value>File {0} was not found.</value></data>
+  <data name="FileResultUnavailable" xml:space="preserve"><value>The result for file {0} is not available yet.</value></data>
+  <data name="InvalidFileTransition" xml:space="preserve"><value>The file cannot be changed in its current state.</value></data>
+  <data name="UnsupportedFileFormat" xml:space="preserve"><value>The file format is not supported: {0}.</value></data>
+  <data name="InvalidFileContent" xml:space="preserve"><value>The file content is invalid.</value></data>
+  <data name="MissingFileContent" xml:space="preserve"><value>The original file is missing from storage.</value></data>
+  <data name="FileProcessingFailed" xml:space="preserve"><value>The file could not be processed.</value></data>
+  <data name="InvalidJsonPreviewWarning" xml:space="preserve"><value>Invalid JSON: shown as text.</value></data>
   <data name="StatusPending" xml:space="preserve"><value>pending</value></data>
   <data name="StatusProcessing" xml:space="preserve"><value>processing</value></data>
   <data name="StatusCompleted" xml:space="preserve"><value>completed</value></data>
