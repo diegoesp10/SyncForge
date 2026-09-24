@@ -398,6 +398,19 @@ MSBuild_Logs/
 # BeatPulse healthcheck temp database
 healthchecksdb
 
+# SyncForge local tooling and development data
+.dotnet-cli/
+.env.*
+!.env.example
+appsettings.*.local.json
+coverage/
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
 # Backup folder for Package Reference Convert tool in Visual Studio 2017
 MigrationBackup/
 

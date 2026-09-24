@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="RequiredValue" xml:space="preserve"><value>The field '{0}' is required.</value></data>
+  <data name="ValueTooLong" xml:space="preserve"><value>The field '{0}' cannot exceed {1} characters.</value></data>
+  <data name="InvalidFormat" xml:space="preserve"><value>The import format is invalid.</value></data>
+  <data name="InvalidStatus" xml:space="preserve"><value>The import status is invalid.</value></data>
+  <data name="InvalidTransition" xml:space="preserve"><value>Import job {0} must be {1} for this action; its current status is {2}.</value></data>
+  <data name="ImportJobNotFound" xml:space="preserve"><value>Import job {0} was not found.</value></data>
+  <data name="InvalidPagination" xml:space="preserve"><value>Skip must be nonnegative and Take must be between 1 and 100.</value></data>
+  <data name="MissingConnectionString" xml:space="preserve"><value>A SQL Server connection string is required.</value></data>
+  <data name="StatusPending" xml:space="preserve"><value>pending</value></data>
+  <data name="StatusProcessing" xml:space="preserve"><value>processing</value></data>
+  <data name="StatusCompleted" xml:space="preserve"><value>completed</value></data>
+  <data name="StatusFailed" xml:space="preserve"><value>failed</value></data>
+</root>
