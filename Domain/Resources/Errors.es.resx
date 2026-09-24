@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="RequiredValue" xml:space="preserve"><value>El campo '{0}' es obligatorio.</value></data>
+  <data name="ValueTooLong" xml:space="preserve"><value>El campo '{0}' no puede superar los {1} caracteres.</value></data>
+  <data name="InvalidFormat" xml:space="preserve"><value>El formato de importación no es válido.</value></data>
+  <data name="InvalidStatus" xml:space="preserve"><value>El estado de importación no es válido.</value></data>
+  <data name="InvalidFailureCode" xml:space="preserve"><value>El código de error de importación no es válido.</value></data>
+  <data name="InvalidImportJobId" xml:space="preserve"><value>El identificador del trabajo de importación debe ser positivo.</value></data>
+  <data name="InvalidAmount" xml:space="preserve"><value>El importe del pedido no puede ser negativo.</value></data>
+  <data name="InvalidAmountPrecision" xml:space="preserve"><value>El importe del pedido admite hasta 16 dígitos enteros y 2 decimales.</value></data>
+  <data name="InvalidCurrency" xml:space="preserve"><value>La moneda debe ser un código de tres letras.</value></data>
+  <data name="InvalidTransition" xml:space="preserve"><value>El trabajo de importación {0} debe estar en estado {1} para realizar esta acción; su estado actual es {2}.</value></data>
+  <data name="ImportJobNotFound" xml:space="preserve"><value>No se encontró el trabajo de importación {0}.</value></data>
+  <data name="InvalidPagination" xml:space="preserve"><value>Skip no puede ser negativo y Take debe estar entre 1 y 100.</value></data>
+  <data name="MissingConnectionString" xml:space="preserve"><value>Se necesita una cadena de conexión a la base de datos.</value></data>
+  <data name="InvalidRequest" xml:space="preserve"><value>La solicitud no es válida.</value></data>
+  <data name="BadRequestTitle" xml:space="preserve"><value>Solicitud no válida</value></data>
+  <data name="NotFoundTitle" xml:space="preserve"><value>Recurso no encontrado</value></data>
+  <data name="ConflictTitle" xml:space="preserve"><value>Conflicto</value></data>
+  <data name="OrderNotFound" xml:space="preserve"><value>No se encontró el pedido {0}.</value></data>
+  <data name="OrderAlreadyExists" xml:space="preserve"><value>El pedido '{0}' ya existe para el origen '{1}'.</value></data>
+  <data name="SourceSystemMismatch" xml:space="preserve"><value>El sistema de origen del pedido debe coincidir con el de su trabajo de importación.</value></data>
+  <data name="ResourceConflict" xml:space="preserve"><value>La operación entra en conflicto con datos existentes.</value></data>
+  <data name="EmptyFile" xml:space="preserve"><value>El archivo está vacío.</value></data>
+  <data name="FileTooLarge" xml:space="preserve"><value>El archivo supera el límite de {0} MB.</value></data>
+  <data name="PayloadTooLargeTitle" xml:space="preserve"><value>Archivo demasiado grande</value></data>
+  <data name="FileNotFound" xml:space="preserve"><value>No se encontró el archivo {0}.</value></data>
+  <data name="FileResultUnavailable" xml:space="preserve"><value>El resultado del archivo {0} todavía no está disponible.</value></data>
+  <data name="InvalidFileTransition" xml:space="preserve"><value>No se puede modificar el archivo en su estado actual.</value></data>
+  <data name="UnsupportedFileFormat" xml:space="preserve"><value>El formato del archivo no es compatible: {0}.</value></data>
+  <data name="InvalidFileContent" xml:space="preserve"><value>El contenido del archivo no es válido.</value></data>
+  <data name="MissingFileContent" xml:space="preserve"><value>Falta el archivo original en el almacenamiento.</value></data>
+  <data name="FileProcessingFailed" xml:space="preserve"><value>No se ha podido procesar el archivo.</value></data>
+  <data name="InvalidJsonPreviewWarning" xml:space="preserve"><value>JSON no válido: se muestra como texto.</value></data>
+  <data name="StatusPending" xml:space="preserve"><value>pendiente</value></data>
+  <data name="StatusProcessing" xml:space="preserve"><value>en proceso</value></data>
+  <data name="StatusCompleted" xml:space="preserve"><value>completado</value></data>
+  <data name="StatusFailed" xml:space="preserve"><value>fallido</value></data>
+  <data name="FailureUnknown" xml:space="preserve"><value>La importación ha fallado.</value></data>
+  <data name="FailureInvalidFile" xml:space="preserve"><value>El archivo de origen no es válido.</value></data>
+  <data name="FailureValidationFailed" xml:space="preserve"><value>Los datos importados no han superado la validación.</value></data>
+  <data name="FailureProcessingFailed" xml:space="preserve"><value>No se ha podido procesar la importación.</value></data>
+</root>

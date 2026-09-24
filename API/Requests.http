@@ -1,0 +1,81 @@
+@host = http://localhost:5254
+@language = es
+@jobId = 1
+@orderId = 1
+@fileId = 00000000-0000-0000-0000-000000000000
+
+### Estado del backend y SQL Server
+GET {{host}}/api/health
+
+### Listar archivos
+GET {{host}}/api/files?language={{language}}
+
+### Consultar un archivo
+GET {{host}}/api/files/{{fileId}}?language={{language}}
+
+### Consultar resultado tras completar el procesamiento
+GET {{host}}/api/files/{{fileId}}/result?language={{language}}
+
+### Volver a procesar un archivo terminado
+POST {{host}}/api/files/{{fileId}}/reprocess?language={{language}}
+
+### Eliminar un archivo
+DELETE {{host}}/api/files/{{fileId}}?language={{language}}
+
+### Subir un archivo: usar curl.exe -F "file=@C:\\ruta\\archivo.csv" http://localhost:5254/api/files
+
+### Crear un trabajo de importación
+POST {{host}}/api/import-jobs?language={{language}}
+Content-Type: application/json
+
+{
+  "sourceSystem": "shop",
+  "fileName": "orders.csv",
+  "storedFileKey": "imports/orders.csv",
+  "format": "Csv"
+}
+
+### Listar trabajos
+GET {{host}}/api/import-jobs?skip=0&take=50&language={{language}}
+
+### Consultar un trabajo
+GET {{host}}/api/import-jobs/{{jobId}}?language={{language}}
+
+### Iniciar un intento
+POST {{host}}/api/import-jobs/{{jobId}}/start?language={{language}}
+
+### Guardar un pedido durante el procesamiento
+POST {{host}}/api/orders?language={{language}}
+Content-Type: application/json
+
+{
+  "importJobId": {{jobId}},
+  "sourceSystem": "shop",
+  "externalId": "ORDER-001",
+  "customerName": "Cliente de ejemplo",
+  "amount": 49.90,
+  "currency": "EUR"
+}
+
+### Consultar un pedido
+GET {{host}}/api/orders/{{orderId}}?language={{language}}
+
+### Consultar por identificador de origen
+GET {{host}}/api/orders/by-source?sourceSystem=shop&externalId=ORDER-001&language={{language}}
+
+### Listar pedidos de un trabajo
+GET {{host}}/api/orders?importJobId={{jobId}}&skip=0&take=50&language={{language}}
+
+### Completar el trabajo
+POST {{host}}/api/import-jobs/{{jobId}}/complete?language={{language}}
+
+### Marcar un intento como fallido (alternativa a completar)
+POST {{host}}/api/import-jobs/{{jobId}}/fail?language={{language}}
+Content-Type: application/json
+
+{
+  "failureCode": "ValidationFailed"
+}
+
+### Preparar un reintento después de fallar
+POST {{host}}/api/import-jobs/{{jobId}}/retry?language={{language}}
