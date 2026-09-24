@@ -38,6 +38,10 @@
   <data name="MissingFileContent" xml:space="preserve"><value>Falta el archivo original en el almacenamiento.</value></data>
   <data name="FileProcessingFailed" xml:space="preserve"><value>No se ha podido procesar el archivo.</value></data>
   <data name="InvalidJsonPreviewWarning" xml:space="preserve"><value>JSON no válido: se muestra como texto.</value></data>
+  <data name="FileAlreadyInTrash" xml:space="preserve"><value>El archivo {0} ya está en la papelera.</value></data>
+  <data name="TrashFileNotFound" xml:space="preserve"><value>No se encontró el archivo {0} en la papelera.</value></data>
+  <data name="TrashRestoreUnavailable" xml:space="preserve"><value>El archivo ya no se puede restaurar desde la papelera.</value></data>
+  <data name="TrashPurgeFailed" xml:space="preserve"><value>No se pudo eliminar definitivamente el archivo de la papelera.</value></data>
   <data name="StatusPending" xml:space="preserve"><value>pendiente</value></data>
   <data name="StatusProcessing" xml:space="preserve"><value>en proceso</value></data>
   <data name="StatusCompleted" xml:space="preserve"><value>completado</value></data>

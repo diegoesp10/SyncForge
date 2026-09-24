@@ -11,6 +11,7 @@ public sealed class SyncForgeDbContext(DbContextOptions<SyncForgeDbContext> opti
     public DbSet<ImportAttempt> ImportAttempts => Set<ImportAttempt>();
     public DbSet<Order> Orders => Set<Order>();
     public DbSet<StoredFile> StoredFiles => Set<StoredFile>();
+    public DbSet<TrashCanEntry> TrashCan => Set<TrashCanEntry>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

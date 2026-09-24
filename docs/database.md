@@ -6,8 +6,10 @@ SyncForge usa SQL Server mediante Entity Framework Core. La conexión de desarro
 
 Los comandos para crear, actualizar y revertir el esquema están en la [guía de migraciones](migrations.md).
 
-Las migraciones crean `ImportJobs`, `ImportAttempts`, `Orders` y `StoredFiles`. Cada trabajo guarda la referencia `StoredFileKey` al archivo de origen, el estado actual, un código estable de fallo y el contador de intentos. Cada intento conserva sus fechas y su propio código de fallo. Los pedidos guardan el identificador externo junto al sistema de origen; esa pareja es única.
+Las migraciones crean `ImportJobs`, `ImportAttempts`, `Orders`, `StoredFiles` y `TrashCan`. Cada trabajo guarda la referencia `StoredFileKey` al archivo de origen, el estado actual, un código estable de fallo y el contador de intentos. Cada intento conserva sus fechas y su propio código de fallo. Los pedidos guardan el identificador externo junto al sistema de origen; esa pareja es única.
 
-`StoredFiles` pertenece al flujo de archivos del frontal. Guarda el nombre, tipo, tamaño, estado, fechas, código de fallo y resultado serializado. El original se almacena en `API/data/uploads` con el GUID como nombre y esa carpeta está excluida de Git. El trabajador recupera los archivos pendientes al arrancar. Por ahora `StoredFiles` y `StoredFileKey` de los trabajos de importación son flujos separados; subir un archivo no crea pedidos.
+`StoredFiles` pertenece al flujo de archivos del frontal. Guarda el nombre, tipo, tamaño, estado, fechas, código de fallo y resultado serializado. El original se almacena en `API/data/uploads` con el GUID como nombre y esa carpeta está excluida de Git. El trabajador recupera los archivos pendientes al arrancar.
+
+`TrashCan` tiene `FileId` como clave primaria y foránea a `StoredFiles`, más `MovedAt`, `PurgeAt` y el estado de borrado. Un archivo en papelera conserva su original y sus datos durante 30 días, pero no aparece en las consultas normales. Al vencer, el trabajador borra primero el original físico y después el registro de `StoredFiles`; la cascada elimina su entrada de `TrashCan`. La tarea se ejecuta al arrancar y cada cinco minutos, y reintenta los fallos en el siguiente ciclo. Por ahora `StoredFiles` y `StoredFileKey` de los trabajos de importación son flujos separados; subir un archivo no crea pedidos.
 
 Los mensajes de error se resuelven en inglés o español al generar la respuesta. La base de datos guarda el código de fallo, no el texto traducido.

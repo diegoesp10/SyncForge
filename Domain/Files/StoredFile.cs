@@ -76,6 +76,14 @@ public sealed class StoredFile
         Version = Guid.NewGuid();
     }
 
+    public void MoveToTrashCan(string language)
+    {
+        if (Status == FileStatus.Processing)
+            throw new InvalidOperationException(ErrorMessages.Get(ErrorCode.InvalidFileTransition, language));
+
+        Version = Guid.NewGuid();
+    }
+
     public void RecoverInterrupted()
     {
         if (Status != FileStatus.Processing)

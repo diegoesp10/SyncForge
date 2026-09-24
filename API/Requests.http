@@ -22,6 +22,24 @@ POST {{host}}/api/files/{{fileId}}/reprocess?language={{language}}
 ### Eliminar un archivo
 DELETE {{host}}/api/files/{{fileId}}?language={{language}}
 
+### Mover un archivo a la papelera (alternativa al DELETE anterior)
+POST {{host}}/api/trash-can/{{fileId}}?language={{language}}
+
+### Listar papelera
+GET {{host}}/api/trash-can?language={{language}}
+
+### Consultar archivo de la papelera
+GET {{host}}/api/trash-can/{{fileId}}?language={{language}}
+
+### Consultar resultado de un archivo de la papelera
+GET {{host}}/api/trash-can/{{fileId}}/result?language={{language}}
+
+### Restaurar antes de los 30 días
+POST {{host}}/api/trash-can/{{fileId}}/restore?language={{language}}
+
+### Borrado definitivo inmediato
+DELETE {{host}}/api/trash-can/{{fileId}}?language={{language}}
+
 ### Subir un archivo: usar curl.exe -F "file=@C:\\ruta\\archivo.csv" http://localhost:5254/api/files
 
 ### Crear un trabajo de importación

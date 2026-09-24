@@ -1,5 +1,9 @@
 # SyncForge
 
+## Explorar la API
+
+Arranca `API` con el perfil `https` de Visual Studio o con `dotnet run --project API/API.csproj --launch-profile https`. Visual Studio abre automáticamente la referencia interactiva en `https://localhost:7233/api-docs`; desde la terminal puedes abrir esa URL en el navegador. El documento OpenAPI generado a partir de los endpoints activos está en `https://localhost:7233/openapi/v1.json`. Consulta [la guía de la API](docs/api.md) para el perfil HTTP y más detalles.
+
 ## Reiniciar la base de datos local (PowerShell)
 
 Ejecuta estos comandos **uno por uno desde la raíz del repositorio**, con la API detenida. La conexión de desarrollo apunta a `localhost`, base `SyncForge`, con autenticación de Windows. El borrado elimina **la base completa y todos sus datos**.

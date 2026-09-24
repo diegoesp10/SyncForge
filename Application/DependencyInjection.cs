@@ -28,10 +28,12 @@ public static class DependencyInjection
         services.AddScoped<IImportJobService, ImportJobService>();
         services.AddScoped<IOrderService, OrderService>();
         services.AddScoped<IFileService, FileService>();
+        services.AddScoped<ITrashCanService, TrashCanService>();
         services.AddScoped<IFileUploadValidator, FileUploadValidator>();
         services.AddScoped<IFileAnalyzer, FileAnalyzer>();
         services.AddScoped<FileProcessingService>();
         services.AddScoped<IHealthService, HealthService>();
+        services.AddSingleton(TimeProvider.System);
         return services;
     }
 }

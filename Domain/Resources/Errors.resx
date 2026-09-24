@@ -38,6 +38,10 @@
   <data name="MissingFileContent" xml:space="preserve"><value>The original file is missing from storage.</value></data>
   <data name="FileProcessingFailed" xml:space="preserve"><value>The file could not be processed.</value></data>
   <data name="InvalidJsonPreviewWarning" xml:space="preserve"><value>Invalid JSON: shown as text.</value></data>
+  <data name="FileAlreadyInTrash" xml:space="preserve"><value>File {0} is already in the trash.</value></data>
+  <data name="TrashFileNotFound" xml:space="preserve"><value>File {0} was not found in the trash.</value></data>
+  <data name="TrashRestoreUnavailable" xml:space="preserve"><value>The file can no longer be restored from the trash.</value></data>
+  <data name="TrashPurgeFailed" xml:space="preserve"><value>The trash file could not be deleted permanently.</value></data>
   <data name="StatusPending" xml:space="preserve"><value>pending</value></data>
   <data name="StatusProcessing" xml:space="preserve"><value>processing</value></data>
   <data name="StatusCompleted" xml:space="preserve"><value>completed</value></data>

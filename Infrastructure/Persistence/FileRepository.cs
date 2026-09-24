@@ -7,17 +7,20 @@ namespace Infrastructure.Persistence;
 public sealed class FileRepository(SyncForgeDbContext dbContext) : IFileRepository
 {
     public Task<StoredFile?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default) =>
-        dbContext.StoredFiles.SingleOrDefaultAsync(file => file.Id == id, cancellationToken);
+        dbContext.StoredFiles.SingleOrDefaultAsync(file => file.Id == id
+            && !dbContext.TrashCan.Any(entry => entry.FileId == file.Id), cancellationToken);
 
     public async Task<IReadOnlyList<StoredFile>> ListAsync(CancellationToken cancellationToken = default) =>
         await dbContext.StoredFiles.AsNoTracking()
+            .Where(file => !dbContext.TrashCan.Any(entry => entry.FileId == file.Id))
             .OrderByDescending(file => file.UploadedAt)
             .ThenByDescending(file => file.Id)
             .ToListAsync(cancellationToken);
 
     public async Task<IReadOnlyList<StoredFile>> ListQueuedAsync(CancellationToken cancellationToken = default) =>
         await dbContext.StoredFiles
-            .Where(file => file.Status == FileStatus.Pending || file.Status == FileStatus.Processing)
+            .Where(file => (file.Status == FileStatus.Pending || file.Status == FileStatus.Processing)
+                && !dbContext.TrashCan.Any(entry => entry.FileId == file.Id))
             .OrderBy(file => file.UploadedAt)
             .ToListAsync(cancellationToken);
 

@@ -6,6 +6,7 @@ using Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Scalar.AspNetCore;
 
 namespace API;
 
@@ -45,7 +46,10 @@ public sealed class Startup(IConfiguration configuration, IWebHostEnvironment en
     public void Configure(WebApplication app)
     {
         if (app.Environment.IsDevelopment())
+        {
             app.MapOpenApi();
+            app.MapScalarApiReference("/api-docs", options => options.WithTitle("SyncForge API"));
+        }
         else
             app.UseHttpsRedirection();
 

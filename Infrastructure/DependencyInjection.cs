@@ -21,10 +21,12 @@ public static class DependencyInjection
         services.AddScoped<IImportJobRepository, ImportJobRepository>();
         services.AddScoped<IOrderRepository, OrderRepository>();
         services.AddScoped<IFileRepository, FileRepository>();
+        services.AddScoped<ITrashCanRepository, TrashCanRepository>();
         services.AddScoped<IHealthProbe, SqlHealthProbe>();
         services.AddSingleton<IFileStorage>(new LocalFileStorage(storageRoot));
         services.AddSingleton<IFileWorkQueue, FileWorkQueue>();
         services.AddHostedService<FileProcessingWorker>();
+        services.AddHostedService<TrashCanCleanupWorker>();
         return services;
     }
 }
