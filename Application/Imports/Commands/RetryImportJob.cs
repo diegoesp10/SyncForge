@@ -12,6 +12,6 @@ public sealed class RetryImportJobHandler(IImportJobRepository repository)
         var job = await ImportJobLookup.GetRequiredAsync(repository, command.Id, language, cancellationToken);
         job.Retry(language);
         await repository.SaveChangesAsync(cancellationToken);
-        return job.ToResponse();
+        return job.ToResponse(language);
     }
 }

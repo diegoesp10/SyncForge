@@ -1,5 +1,7 @@
 using Application.Imports.Commands;
 using Application.Imports.Queries;
+using Application.Orders.Commands;
+using Application.Orders.Queries;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application;
@@ -15,6 +17,10 @@ public static class DependencyInjection
         services.AddScoped<RetryImportJobHandler>();
         services.AddScoped<GetImportJobHandler>();
         services.AddScoped<ListImportJobsHandler>();
+        services.AddScoped<CreateOrderHandler>();
+        services.AddScoped<GetOrderHandler>();
+        services.AddScoped<GetOrderBySourceHandler>();
+        services.AddScoped<ListOrdersHandler>();
         return services;
     }
 }

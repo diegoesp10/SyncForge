@@ -8,12 +8,29 @@
   <data name="ValueTooLong" xml:space="preserve"><value>The field '{0}' cannot exceed {1} characters.</value></data>
   <data name="InvalidFormat" xml:space="preserve"><value>The import format is invalid.</value></data>
   <data name="InvalidStatus" xml:space="preserve"><value>The import status is invalid.</value></data>
+  <data name="InvalidFailureCode" xml:space="preserve"><value>The import failure code is invalid.</value></data>
+  <data name="InvalidImportJobId" xml:space="preserve"><value>The import job id must be positive.</value></data>
+  <data name="InvalidAmount" xml:space="preserve"><value>The order amount cannot be negative.</value></data>
+  <data name="InvalidAmountPrecision" xml:space="preserve"><value>The order amount must fit 16 whole digits and 2 decimal places.</value></data>
+  <data name="InvalidCurrency" xml:space="preserve"><value>Currency must be a three-letter code.</value></data>
   <data name="InvalidTransition" xml:space="preserve"><value>Import job {0} must be {1} for this action; its current status is {2}.</value></data>
   <data name="ImportJobNotFound" xml:space="preserve"><value>Import job {0} was not found.</value></data>
   <data name="InvalidPagination" xml:space="preserve"><value>Skip must be nonnegative and Take must be between 1 and 100.</value></data>
-  <data name="MissingConnectionString" xml:space="preserve"><value>A SQL Server connection string is required.</value></data>
+  <data name="MissingConnectionString" xml:space="preserve"><value>A database connection string is required.</value></data>
+  <data name="InvalidRequest" xml:space="preserve"><value>The request is invalid.</value></data>
+  <data name="BadRequestTitle" xml:space="preserve"><value>Invalid request</value></data>
+  <data name="NotFoundTitle" xml:space="preserve"><value>Resource not found</value></data>
+  <data name="ConflictTitle" xml:space="preserve"><value>Conflict</value></data>
+  <data name="OrderNotFound" xml:space="preserve"><value>Order {0} was not found.</value></data>
+  <data name="OrderAlreadyExists" xml:space="preserve"><value>Order '{0}' already exists for source '{1}'.</value></data>
+  <data name="SourceSystemMismatch" xml:space="preserve"><value>The order source system must match its import job.</value></data>
+  <data name="ResourceConflict" xml:space="preserve"><value>The operation conflicts with existing data.</value></data>
   <data name="StatusPending" xml:space="preserve"><value>pending</value></data>
   <data name="StatusProcessing" xml:space="preserve"><value>processing</value></data>
   <data name="StatusCompleted" xml:space="preserve"><value>completed</value></data>
   <data name="StatusFailed" xml:space="preserve"><value>failed</value></data>
+  <data name="FailureUnknown" xml:space="preserve"><value>The import failed.</value></data>
+  <data name="FailureInvalidFile" xml:space="preserve"><value>The source file is invalid.</value></data>
+  <data name="FailureValidationFailed" xml:space="preserve"><value>The imported data did not pass validation.</value></data>
+  <data name="FailureProcessingFailed" xml:space="preserve"><value>The import could not be processed.</value></data>
 </root>

@@ -408,8 +408,6 @@ coverage/
 *.db-journal
 *.db-shm
 *.db-wal
-*.sqlite
-*.sqlite3
 
 # Backup folder for Package Reference Convert tool in Visual Studio 2017
 MigrationBackup/

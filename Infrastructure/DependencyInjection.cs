@@ -1,4 +1,5 @@
 using Application.Imports;
+using Application.Orders;
 using Domain.Resources;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,7 @@ public static class DependencyInjection
         services.AddDbContext<SyncForgeDbContext>(options =>
             options.UseSqlServer(connectionString, sql => sql.EnableRetryOnFailure()));
         services.AddScoped<IImportJobRepository, ImportJobRepository>();
+        services.AddScoped<IOrderRepository, OrderRepository>();
         return services;
     }
 }

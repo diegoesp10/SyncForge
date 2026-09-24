@@ -10,6 +10,6 @@ public sealed class GetImportJobHandler(IImportJobRepository repository)
     {
         ImportJobLookup.Require(query, nameof(query), language);
         var job = await repository.GetByIdAsync(query.Id, cancellationToken);
-        return job?.ToResponse();
+        return job?.ToResponse(language);
     }
 }

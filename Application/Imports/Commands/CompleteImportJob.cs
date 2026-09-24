@@ -12,6 +12,6 @@ public sealed class CompleteImportJobHandler(IImportJobRepository repository)
         var job = await ImportJobLookup.GetRequiredAsync(repository, command.Id, language, cancellationToken);
         job.Complete(language);
         await repository.SaveChangesAsync(cancellationToken);
-        return job.ToResponse();
+        return job.ToResponse(language);
     }
 }

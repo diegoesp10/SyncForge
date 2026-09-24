@@ -14,6 +14,6 @@ public sealed class ListImportJobsHandler(IImportJobRepository repository)
             throw new ArgumentOutOfRangeException(nameof(query), ErrorMessages.Get(ErrorCode.InvalidPagination, language));
 
         var jobs = await repository.ListAsync(query.Skip, query.Take, cancellationToken);
-        return jobs.Select(job => job.ToResponse()).ToArray();
+        return jobs.Select(job => job.ToResponse(language)).ToArray();
     }
 }

@@ -26,6 +26,16 @@ public static class ErrorMessages
             _ => throw new ArgumentOutOfRangeException(nameof(status), Get(ErrorCode.InvalidStatus, language))
         }, language);
 
+    public static string Failure(ImportFailureCode failureCode, string? language) =>
+        Get(failureCode switch
+        {
+            ImportFailureCode.Unknown => ErrorCode.FailureUnknown,
+            ImportFailureCode.InvalidFile => ErrorCode.FailureInvalidFile,
+            ImportFailureCode.ValidationFailed => ErrorCode.FailureValidationFailed,
+            ImportFailureCode.ProcessingFailed => ErrorCode.FailureProcessingFailed,
+            _ => throw new ArgumentOutOfRangeException(nameof(failureCode), Get(ErrorCode.InvalidFailureCode, language))
+        }, language);
+
     private static CultureInfo CultureFor(string? language) =>
         language?.StartsWith("es", StringComparison.OrdinalIgnoreCase) == true
             ? CultureInfo.GetCultureInfo("es")

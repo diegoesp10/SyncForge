@@ -1,4 +1,5 @@
 using Domain.Imports;
+using Domain.Orders;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence;
@@ -6,6 +7,8 @@ namespace Infrastructure.Persistence;
 public sealed class SyncForgeDbContext(DbContextOptions<SyncForgeDbContext> options) : DbContext(options)
 {
     public DbSet<ImportJob> ImportJobs => Set<ImportJob>();
+    public DbSet<ImportAttempt> ImportAttempts => Set<ImportAttempt>();
+    public DbSet<Order> Orders => Set<Order>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

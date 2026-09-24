@@ -7,11 +7,14 @@ namespace Infrastructure.Persistence;
 public sealed class ImportJobRepository(SyncForgeDbContext dbContext) : IImportJobRepository
 {
     public Task<ImportJob?> GetByIdAsync(int id, CancellationToken cancellationToken = default) =>
-        dbContext.ImportJobs.SingleOrDefaultAsync(job => job.Id == id, cancellationToken);
+        dbContext.ImportJobs.Include(job => job.Attempts)
+            .SingleOrDefaultAsync(job => job.Id == id, cancellationToken);
 
     public async Task<IReadOnlyList<ImportJob>> ListAsync(int skip, int take, CancellationToken cancellationToken = default) =>
         await dbContext.ImportJobs
             .AsNoTracking()
+            .AsSplitQuery()
+            .Include(job => job.Attempts)
             .OrderByDescending(job => job.CreatedAt)
             .ThenByDescending(job => job.Id)
             .Skip(skip)

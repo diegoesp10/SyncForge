@@ -1,8 +1,9 @@
 using Contracts.Imports;
+using Domain.Imports.Enums;
 
 namespace Application.Imports.Commands;
 
-public sealed record FailImportJobCommand(int Id, string ErrorMessage);
+public sealed record FailImportJobCommand(int Id, ImportFailureCode FailureCode);
 
 public sealed class FailImportJobHandler(IImportJobRepository repository)
 {
@@ -10,8 +11,8 @@ public sealed class FailImportJobHandler(IImportJobRepository repository)
     {
         ImportJobLookup.Require(command, nameof(command), language);
         var job = await ImportJobLookup.GetRequiredAsync(repository, command.Id, language, cancellationToken);
-        job.Fail(command.ErrorMessage, language);
+        job.Fail(command.FailureCode, language);
         await repository.SaveChangesAsync(cancellationToken);
-        return job.ToResponse();
+        return job.ToResponse(language);
     }
 }
