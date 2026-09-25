@@ -64,5 +64,26 @@ public sealed class SecurityDbContext(DbContextOptions<SecurityDbContext> option
                 NormalizedName = AppRoles.SuperAdmin.ToUpperInvariant(),
                 ConcurrencyStamp = "syncforge-superadmin-role-v1"
             });
+
+        builder.Entity<AppUser>().HasData(new AppUser
+        {
+            Id = InitialSuperAdmin.Id,
+            UserName = InitialSuperAdmin.UserName,
+            NormalizedUserName = "DIEGOESPINA",
+            Email = InitialSuperAdmin.Email,
+            NormalizedEmail = "DIEGOESPINARODRIGUEZ@GMAIL.COM",
+            DisplayName = InitialSuperAdmin.UserName,
+            CreatedAt = new DateTimeOffset(2026, 9, 25, 0, 0, 0, TimeSpan.Zero),
+            IsActive = true,
+            EmailConfirmed = false,
+            LockoutEnabled = true,
+            SecurityStamp = "syncforge-diego-pending-setup-v1",
+            ConcurrencyStamp = "syncforge-diego-pending-setup-v1"
+        });
+        builder.Entity<IdentityUserRole<Guid>>().HasData(new IdentityUserRole<Guid>
+        {
+            UserId = InitialSuperAdmin.Id,
+            RoleId = Guid.Parse("4c9868f3-10df-41ba-b33a-46ae2a021003")
+        });
     }
 }

@@ -8,7 +8,7 @@ namespace Security.Authentication;
 
 public sealed class LocalTokenIssuer(LocalTokenOptions options)
 {
-    public AuthTokenResponse Issue(AppUser user, AuthSession session)
+    public AuthTokenResponse Issue(AppUser user, AuthSession session, bool isFirstLogin)
     {
         var claims = new[]
         {
@@ -24,6 +24,8 @@ public sealed class LocalTokenIssuer(LocalTokenOptions options)
             expires: session.ExpiresAt.UtcDateTime,
             signingCredentials: new SigningCredentials(
                 new SymmetricSecurityKey(options.SigningKey), SecurityAlgorithms.HmacSha256));
-        return new AuthTokenResponse(new JwtSecurityTokenHandler().WriteToken(token), "Bearer", session.ExpiresAt);
+        return new AuthTokenResponse(
+            new JwtSecurityTokenHandler().WriteToken(token), "Bearer", session.ExpiresAt,
+            isFirstLogin, user.OnboardingCompletedAt is null);
     }
 }

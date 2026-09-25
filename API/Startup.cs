@@ -54,7 +54,9 @@ public sealed class Startup(IConfiguration configuration, IWebHostEnvironment en
             {
                 [new OpenApiSecuritySchemeReference("Bearer", document)] = []
             });
-            foreach (var publicPath in new[] { "/api/auth/login", "/api/health" })
+            foreach (var publicPath in new[]
+                     { "/api/auth/login", "/api/auth/register", "/api/auth/resend-confirmation",
+                       "/api/auth/confirm-email", "/api/health" })
                 if (document.Paths.TryGetValue(publicPath, out var path) && path?.Operations is { } operations)
                     foreach (var operation in operations.Values)
                         operation.Security = [];

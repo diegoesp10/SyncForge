@@ -4,7 +4,7 @@
 
 La API genera el documento OpenAPI con `Microsoft.AspNetCore.OpenApi` y lo muestra con Scalar. Al iniciar el proyecto `API` en entorno `Development`, el perfil de Visual Studio abre automáticamente la interfaz. También puedes entrar manualmente:
 
-Solo `GET /api/health` y `POST /api/auth/login` son acciones públicas. Las demás acciones HTTP requieren `Authorization: Bearer <accessToken>`. Obtén el token tras crear el primer `SuperAdmin` con el comando interactivo de [seguridad](security.md). En Scalar, usa la opción de autorización Bearer para probar rutas protegidas. La propia documentación permanece accesible sin token solo en desarrollo.
+`GET /api/health` y las acciones de registro, verificación y login son públicas. Las demás acciones HTTP requieren `Authorization: Bearer <accessToken>`. La migración crea al `SuperAdmin` pendiente de activación; consulta [seguridad](security.md) para establecer su contraseña y confirmar el correo. En Scalar, usa la opción de autorización Bearer para probar rutas protegidas. La propia documentación permanece accesible sin token solo en desarrollo.
 
 | Perfil | Interfaz interactiva | Documento JSON |
 | --- | --- | --- |
@@ -19,8 +19,12 @@ Todas las rutas admiten `?language=es` o `?language=en`. También se acepta `Acc
 
 | Método | Ruta | Acción |
 | --- | --- | --- |
-| `POST` | `/api/auth/login` | Iniciar sesión con correo y contraseña; devuelve un token de 24 horas (anónimo) |
-| `GET` | `/api/auth/me` | Consultar la cuenta del token |
+| `POST` | `/api/auth/register` | Registrar un usuario `User` pendiente de confirmar email (`202`, anónimo) |
+| `POST` | `/api/auth/resend-confirmation` | Reenviar confirmación, también para el `SuperAdmin` inicial (`202`, anónimo) |
+| `GET` | `/api/auth/confirm-email?userId={id}&token={token}` | Confirmar la dirección de correo (`204`, anónimo) |
+| `POST` | `/api/auth/login` | Iniciar sesión; devuelve un token de 24 horas, `isFirstLogin` y `shouldShowOnboarding` (anónimo) |
+| `GET` | `/api/auth/me` | Consultar la cuenta del token, incluido `shouldShowOnboarding` |
+| `POST` | `/api/auth/onboarding/complete` | Marcar como terminada la guía inicial del usuario del token (`204`) |
 | `POST` | `/api/auth/logout` | Revocar la sesión actual (`204`) |
 | `GET` | `/api/users` | Listar usuarios (`SuperAdmin`) |
 | `GET` | `/api/users/{id}` | Consultar usuario (`SuperAdmin`) |
@@ -52,6 +56,20 @@ Todas las rutas admiten `?language=es` o `?language=en`. También se acepta `Acc
 | `GET` | `/api/orders/{id}` | Consultar un pedido |
 | `GET` | `/api/orders/by-source?sourceSystem={sourceSystem}&externalId={externalId}` | Consultar por identidad de origen |
 | `GET` | `/api/orders?importJobId={id}&skip=0&take=50` | Listar pedidos de un trabajo |
+
+El login devuelve, junto al token, `isFirstLogin` y `shouldShowOnboarding`:
+
+```json
+{
+  "accessToken": "<jwt>",
+  "tokenType": "Bearer",
+  "expiresAt": "<fecha UTC>",
+  "isFirstLogin": true,
+  "shouldShowOnboarding": true
+}
+```
+
+Usa `shouldShowOnboarding` para mostrar la guía. Si la persona la termina, envía `POST /api/auth/onboarding/complete` con su token y guarda `false` en el estado del frontal después del `204`. Si la cierra a medias, déjala pendiente; el siguiente login o `GET /api/auth/me` seguirá indicando `true`. `isFirstLogin` solo informa si era la primera autenticación correcta y no vuelve a ser `true`.
 
 El flujo de archivos responde al contrato de `SyncForge Front/API_CONTRACT.md`. La API guarda el original en `API/data/uploads` y sus metadatos, estado y resultado en SQL Server. Solo admite CSV, TSV, JSON, TXT, LOG, XML y MD con contenido de texto UTF-8. Antes de registrar la subida comprueba la extensión, el tipo MIME declarado y los bytes del archivo; fotos, vídeos, audio, documentos binarios y XLSX reciben `415 Unsupported Media Type` y no se conservan. El tipo MIME por sí solo no determina la aceptación. Un trabajador en segundo plano entrega hasta 200 filas de tabla o una vista previa limitada de texto/JSON. Un JSON inválido se muestra como texto con una advertencia localizada. Si se reinicia la API, los archivos pendientes o interrumpidos vuelven a la cola.
 

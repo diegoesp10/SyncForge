@@ -12,6 +12,8 @@ Arranca `API` con el perfil `https` de Visual Studio o con `dotnet run --project
 - `DELETE /api/files/{id}` mueve el archivo a `TrashCan`. `GET /api/trash-can` lista la papelera, `POST /api/trash-can/{id}/restore` lo restaura y `DELETE /api/trash-can/{id}` lo elimina definitivamente. El borrado automático se ejecuta 30 días después del movimiento.
 - Los trabajos de importación y pedidos tienen sus propios endpoints y tablas. Su flujo todavía es independiente del procesamiento de `/api/files`. Los mensajes de error se devuelven en inglés o español mediante `?language=en`, `?language=es` o `Accept-Language`.
 - `Security` guarda usuarios, roles y sesiones en la base SQL Server independiente `SyncForgeAuth`. La API exige `Authorization: Bearer <token>` en las rutas de negocio. El token local dura 24 horas y se comprueba contra una sesión revocable en cada petición.
+- Las contraseñas se guardan con el hasher estándar de ASP.NET Core Identity V3 (PBKDF2, HMAC-SHA512, sal aleatoria y 100 000 iteraciones); nunca se almacenan en texto plano. La preparación inicial de `DiegoEspina` se ejecuta con `--SuperAdminCreation` desde una terminal interactiva.
+- El login devuelve `isFirstLogin` y `shouldShowOnboarding`. El frontal puede mostrar su guía mientras `shouldShowOnboarding` sea `true` y, al completarla, llamar a `POST /api/auth/onboarding/complete`. Ese estado se guarda por usuario y también se consulta en `GET /api/auth/me`.
 
 La conexión de desarrollo usa SQL Server en `localhost` con autenticación de Windows. Las rutas y los cuerpos de petición están detallados en [la guía de la API](docs/api.md) y en [Requests.http](API/Requests.http).
 
@@ -24,17 +26,17 @@ $key = [Convert]::ToBase64String([Security.Cryptography.RandomNumberGenerator]::
 @{ Security = @{ SigningKey = $key } } | ConvertTo-Json -Depth 3 | Set-Content API/appsettings.Development.local.json
 ```
 
-Aplica las migraciones de identidad y crea tu cuenta `SuperAdmin` mediante el asistente interactivo. La contraseña no pasa por argumentos ni queda en Git:
+La migración de identidad ya inserta `DiegoEspina` (`diegoespinarodriguez@gmail.com`) con rol `SuperAdmin`, sin contraseña y con el correo pendiente de confirmar. Después de aplicar las migraciones, establece una contraseña privada mediante el asistente interactivo:
 
 ```powershell
 $env:ASPNETCORE_ENVIRONMENT = 'Development'
 dotnet tool restore
 dotnet build API/API.csproj -m:1 /nodeReuse:false
 dotnet ef database update --context SecurityDbContext --project Security/Security.csproj --startup-project API/API.csproj --no-build
-dotnet run --project API/API.csproj --launch-profile https -- --bootstrap-superadmin
+dotnet run --project API/API.csproj --launch-profile https -- --SuperAdminCreation
 ```
 
-El último comando pide correo, nombre y contraseña por consola; solo permite crear el primer `SuperAdmin`. La contraseña debe tener al menos 12 caracteres, mayúscula, minúscula, número y símbolo. Después, inicia normalmente la API y llama a `POST /api/auth/login` con `{"email":"tu@correo.com","password":"..."}`. Usa el `accessToken` devuelto en `Authorization: Bearer <accessToken>`. `POST /api/auth/logout` revoca la sesión. El `SuperAdmin` puede crear cuentas `User` y `Admin` en `/api/users`; por ahora los tres roles tienen acceso a los endpoints de negocio y solo `SuperAdmin` administra usuarios. Consulta [seguridad y futura integración Entra ID](docs/security.md).
+El último comando pide una contraseña y su confirmación; exige al menos 12 caracteres, mayúscula, minúscula, número y símbolo. Para activar la cuenta, configura la credencial SMTP privada y solicita un enlace con `POST /api/auth/resend-confirmation`; confirma el correo recibido. Sin SMTP, el registro y el reenvío responden `503`. Solo entonces podrás iniciar sesión en `POST /api/auth/login`. El registro público `POST /api/auth/register` crea cuentas `User` pendientes de verificación; el `SuperAdmin` puede crear cuentas `User` y `Admin` en `/api/users`. Consulta [seguridad, correo y futura integración Entra ID](docs/security.md).
 
 **Entra ID aún no está activo:** falta registrar la aplicación. La cuenta local funciona para esta demo; más adelante se podrá vincular a Entra mediante identificadores de tenant y objeto, sin almacenar contraseñas de Microsoft.
 El tenant de desarrollo `ab9d8530-f78b-472a-b807-04804330194a` ya figura en `API/appsettings.Development.json`. Falta registrar la aplicación y obtener su Client ID; el login actual sigue emitiendo tokens propios de SyncForge.

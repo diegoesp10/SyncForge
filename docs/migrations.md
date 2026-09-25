@@ -96,7 +96,7 @@ dotnet ef database drop --context SecurityDbContext --project Security/Security.
 dotnet ef database update --context SecurityDbContext --project Security/Security.csproj --startup-project API/API.csproj --no-build
 ```
 
-Después del borrado tendrás que crear de nuevo el primer `SuperAdmin` con `dotnet run --project API/API.csproj --launch-profile https -- --bootstrap-superadmin`. Para revertir todas las tablas de identidad conservando la base vacía, usa:
+Después del borrado, `database update` vuelve a insertar a `DiegoEspina` sin contraseña y sin correo confirmado. Tendrás que fijar de nuevo su contraseña con `dotnet run --project API/API.csproj --launch-profile https -- --SuperAdminCreation` y verificar el email. Para revertir todas las tablas de identidad conservando la base vacía, usa:
 
 ```powershell
 dotnet ef database update 0 --context SecurityDbContext --project Security/Security.csproj --startup-project API/API.csproj --no-build

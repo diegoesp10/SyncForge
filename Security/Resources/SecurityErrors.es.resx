@@ -16,6 +16,9 @@
   <data name="SecurityDatabaseNotReady" xml:space="preserve"><value>Debes aplicar la migración de la base de seguridad antes de crear el SuperAdmin inicial.</value></data>
   <data name="SecurityConfigurationMissing" xml:space="preserve"><value>Se necesita la conexión a la base de seguridad y una clave privada de firma de al menos 256 bits.</value></data>
   <data name="TooManyLoginAttempts" xml:space="preserve"><value>Demasiados intentos de acceso. Vuelve a intentarlo más tarde.</value></data>
+  <data name="TooManyRegistrationAttempts" xml:space="preserve"><value>Demasiadas solicitudes de registro. Vuelve a intentarlo más tarde.</value></data>
+  <data name="EmailDeliveryUnavailable" xml:space="preserve"><value>La verificación por correo no está disponible. Configura el servicio de correo e inténtalo de nuevo.</value></data>
+  <data name="InvalidConfirmationToken" xml:space="preserve"><value>El enlace de confirmación no es válido o ha caducado.</value></data>
   <data name="InteractiveTerminalRequired" xml:space="preserve"><value>Se necesita una terminal interactiva para introducir de forma segura la contraseña inicial del SuperAdmin.</value></data>
   <data name="PasswordsDoNotMatch" xml:space="preserve"><value>Las contraseñas no coinciden.</value></data>
 </root>

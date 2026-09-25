@@ -5,17 +5,39 @@
 @orderId = 1
 @fileId = 00000000-0000-0000-0000-000000000000
 
-### Iniciar sesión (anónimo)
-POST {{host}}/api/auth/login?language={{language}}
+### Registro público: sustituye el correo y usa una contraseña privada
+POST {{host}}/api/auth/register?language={{language}}
 Content-Type: application/json
 
 {
   "email": "tu@correo.com",
+  "displayName": "Tu nombre",
+  "password": "CAMBIA_ESTA_CLAVE_PRIVADA_2026!"
+}
+
+### Reenviar verificación, también para DiegoEspina
+POST {{host}}/api/auth/resend-confirmation?language={{language}}
+Content-Type: application/json
+
+{"email":"diegoespinarodriguez@gmail.com"}
+
+### El enlace de verificación llega al correo y llama a GET /api/auth/confirm-email
+
+### Iniciar sesión (anónimo); la respuesta incluye isFirstLogin y shouldShowOnboarding
+POST {{host}}/api/auth/login?language={{language}}
+Content-Type: application/json
+
+{
+  "email": "diegoespinarodriguez@gmail.com",
   "password": "tu-contraseña"
 }
 
 ### Usuario autenticado
 GET {{host}}/api/auth/me?language={{language}}
+Authorization: Bearer {{token}}
+
+### Marcar la guía inicial como completada (idempotente)
+POST {{host}}/api/auth/onboarding/complete?language={{language}}
 Authorization: Bearer {{token}}
 
 ### Cerrar sesión y revocar el token
@@ -34,7 +56,7 @@ Content-Type: application/json
 {
   "email": "usuario@example.com",
   "displayName": "Usuario de ejemplo",
-  "password": "CambiaEstaClave!2026",
+  "password": "CAMBIA_ESTA_CLAVE_PRIVADA_2026!",
   "role": "User"
 }
 

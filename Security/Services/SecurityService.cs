@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Security.Authentication;
 using Security.Contracts;
+using Security.Email;
 using Security.Identity;
 using Security.Persistence;
 using Security.Resources;
@@ -15,6 +16,7 @@ public sealed class SecurityService(
     SecurityDbContext db,
     LocalTokenIssuer tokens,
     LocalTokenOptions tokenOptions,
+    IEmailSender sender,
     TimeProvider clock) : ISecurityService
 {
     public async Task<AuthTokenResponse> LoginAsync(LoginRequest request, CancellationToken cancellationToken = default)
@@ -31,6 +33,10 @@ public sealed class SecurityService(
             throw new SecurityOperationException(SecurityErrorCode.InvalidCredentials, 401);
 
         var now = clock.GetUtcNow();
+        await using var transaction = await db.Database.BeginTransactionAsync(cancellationToken);
+        var isFirstLogin = await db.Users
+            .Where(item => item.Id == user.Id && item.LastSignedInAt == null)
+            .ExecuteUpdateAsync(setters => setters.SetProperty(item => item.LastSignedInAt, now), cancellationToken) == 1;
         user.LastSignedInAt = now;
         var session = new AuthSession
         {
@@ -42,9 +48,10 @@ public sealed class SecurityService(
         };
         user.Sessions.Add(session);
         await db.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
         await db.AuthSessions.Where(item => item.ExpiresAt < now.AddDays(-1))
             .ExecuteDeleteAsync(cancellationToken);
-        return tokens.Issue(user, session);
+        return tokens.Issue(user, session, isFirstLogin);
     }
 
     public async Task LogoutAsync(Guid userId, Guid sessionId, CancellationToken cancellationToken = default)
@@ -55,6 +62,14 @@ public sealed class SecurityService(
             return;
         session.RevokedAt = clock.GetUtcNow();
         await db.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task CompleteOnboardingAsync(Guid userId, CancellationToken cancellationToken = default)
+    {
+        var completedAt = clock.GetUtcNow();
+        await db.Users.Where(user => user.Id == userId && user.OnboardingCompletedAt == null)
+            .ExecuteUpdateAsync(setters => setters.SetProperty(user => user.OnboardingCompletedAt, completedAt),
+                cancellationToken);
     }
 
     public async Task<UserResponse> GetUserAsync(Guid userId, CancellationToken cancellationToken = default)
@@ -75,6 +90,8 @@ public sealed class SecurityService(
 
     public async Task<UserResponse> CreateUserAsync(CreateUserRequest request, CancellationToken cancellationToken = default)
     {
+        if (!sender.IsConfigured)
+            throw new SecurityOperationException(SecurityErrorCode.EmailDeliveryUnavailable, 503);
         if (!IsAllowedManagedRole(request.Role))
             throw new SecurityOperationException(SecurityErrorCode.InvalidRole, 400);
         if (string.IsNullOrWhiteSpace(request.Email) || !new EmailAddressAttribute().IsValid(request.Email)
@@ -92,6 +109,7 @@ public sealed class SecurityService(
             UserName = request.Email.Trim(),
             Email = request.Email.Trim(),
             DisplayName = request.DisplayName.Trim(),
+            EmailConfirmed = false,
             CreatedAt = clock.GetUtcNow()
         };
         var created = await users.CreateAsync(user, request.Password);
@@ -103,6 +121,8 @@ public sealed class SecurityService(
         if (!assigned.Succeeded)
             throw new SecurityOperationException(SecurityErrorCode.InvalidRole, 400);
         await transaction.CommitAsync(cancellationToken);
+        var confirmationToken = await users.GenerateEmailConfirmationTokenAsync(user);
+        await sender.SendConfirmationAsync(user.Email!, user.Id, confirmationToken, cancellationToken);
         return await ToResponseAsync(user);
     }
 
@@ -143,7 +163,8 @@ public sealed class SecurityService(
 
     private async Task<UserResponse> ToResponseAsync(AppUser user) =>
         new(user.Id, user.Email ?? string.Empty, user.DisplayName, user.IsActive,
-            (await users.GetRolesAsync(user)).ToArray(), user.LastSignedInAt);
+            user.EmailConfirmed, (await users.GetRolesAsync(user)).ToArray(),
+            user.LastSignedInAt, user.OnboardingCompletedAt is null);
 
     private static bool IsAllowedManagedRole(string? role) => role is AppRoles.User or AppRoles.Admin;
 

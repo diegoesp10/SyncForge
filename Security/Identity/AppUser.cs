@@ -8,6 +8,7 @@ public sealed class AppUser : IdentityUser<Guid>
     public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
     public bool IsActive { get; set; } = true;
     public DateTimeOffset? LastSignedInAt { get; set; }
+    public DateTimeOffset? OnboardingCompletedAt { get; set; }
     public ICollection<AuthSession> Sessions { get; set; } = new List<AuthSession>();
 
     // An Entra account can be linked later by stable tenant and object IDs.

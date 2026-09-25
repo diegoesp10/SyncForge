@@ -14,6 +14,9 @@ public enum SecurityErrorCode
     SecurityDatabaseNotReady,
     SecurityConfigurationMissing,
     TooManyLoginAttempts,
+    TooManyRegistrationAttempts,
+    EmailDeliveryUnavailable,
+    InvalidConfirmationToken,
     InteractiveTerminalRequired,
     PasswordsDoNotMatch
 }
