@@ -5,7 +5,7 @@
 @orderId = 1
 @fileId = 00000000-0000-0000-0000-000000000000
 
-### Iniciar sesión (la única llamada anónima)
+### Iniciar sesión (anónimo)
 POST {{host}}/api/auth/login?language={{language}}
 Content-Type: application/json
 
@@ -52,9 +52,8 @@ Content-Type: application/json
 
 {"isActive":false}
 
-### Estado del backend y SQL Server
+### Estado del backend y SQL Server (anónimo)
 GET {{host}}/api/health
-Authorization: Bearer {{token}}
 
 ### Listar archivos
 GET {{host}}/api/files?language={{language}}

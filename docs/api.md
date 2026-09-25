@@ -4,7 +4,7 @@
 
 La API genera el documento OpenAPI con `Microsoft.AspNetCore.OpenApi` y lo muestra con Scalar. Al iniciar el proyecto `API` en entorno `Development`, el perfil de Visual Studio abre automáticamente la interfaz. También puedes entrar manualmente:
 
-Salvo `POST /api/auth/login`, las acciones HTTP de la API requieren `Authorization: Bearer <accessToken>`. Obtén el token tras crear el primer `SuperAdmin` con el comando interactivo de [seguridad](security.md). En Scalar, usa la opción de autorización Bearer para probar rutas protegidas. La propia documentación permanece accesible sin token solo en desarrollo.
+Solo `GET /api/health` y `POST /api/auth/login` son acciones públicas. Las demás acciones HTTP requieren `Authorization: Bearer <accessToken>`. Obtén el token tras crear el primer `SuperAdmin` con el comando interactivo de [seguridad](security.md). En Scalar, usa la opción de autorización Bearer para probar rutas protegidas. La propia documentación permanece accesible sin token solo en desarrollo.
 
 | Perfil | Interfaz interactiva | Documento JSON |
 | --- | --- | --- |
@@ -27,7 +27,7 @@ Todas las rutas admiten `?language=es` o `?language=en`. También se acepta `Acc
 | `POST` | `/api/users` | Crear usuario `User` o `Admin` (`SuperAdmin`) |
 | `PATCH` | `/api/users/{id}/role` | Cambiar rol (`SuperAdmin`) |
 | `PATCH` | `/api/users/{id}/status` | Activar o desactivar usuario (`SuperAdmin`) |
-| `GET` | `/api/health` | Comprobar la conexión con SQL Server y obtener la versión |
+| `GET` | `/api/health` | Comprobar la conexión con SQL Server y obtener la versión (anónimo; `503` si la base no responde) |
 | `POST` | `/api/files` | Subir un archivo multipart en el campo `file` (máximo 50 MB) |
 | `GET` | `/api/files` | Listar archivos del más reciente al más antiguo |
 | `GET` | `/api/files/{id}` | Consultar estado y metadatos de un archivo |
