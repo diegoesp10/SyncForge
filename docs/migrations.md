@@ -1,12 +1,12 @@
 # Migraciones de EF Core
 
-Ejecuta estos comandos desde la raíz del repositorio. EF Core usa la API como proyecto de inicio y lee `ConnectionStrings:SyncForge` de `API/appsettings.Development.json`. En PowerShell, selecciona el entorno de desarrollo antes de trabajar con la base local:
+Ejecuta estos comandos desde la raíz del repositorio. EF Core usa la API como proyecto de inicio. `Infrastructure` y `SyncForgeDbContext` migran la base de negocio `SyncForge`; `Security` y `SecurityDbContext` migran por separado `SyncForgeAuth`. Ambas conexiones están en `API/appsettings.Development.json`. En PowerShell, selecciona el entorno de desarrollo antes de trabajar con las bases locales:
 
 ```powershell
 $env:ASPNETCORE_ENVIRONMENT = 'Development'
 ```
 
-Para otro servidor, cambia la configuración del entorno correspondiente o define `ConnectionStrings__SyncForge` en la sesión.
+Para otro servidor, cambia la configuración del entorno correspondiente o define `ConnectionStrings__SyncForge` y `ConnectionStrings__SyncForgeAuth` en la sesión. La clave privada de firma local se carga desde `API/appsettings.Development.local.json`; si clonas el repositorio, créala como explica [security.md](security.md) antes de ejecutar EF, porque la API valida su configuración al arrancar.
 
 El repositorio fija `dotnet-ef` en la versión `10.0.12` mediante `dotnet-tools.json`. En una instalación nueva, restaura la herramienta:
 
@@ -75,3 +75,40 @@ dotnet ef database update --project Infrastructure/Infrastructure.csproj --start
 ```
 
 `database update 0` revierte el esquema sin borrar la base. Para eliminar también la base, utiliza la secuencia completa de «Borrar la base y volver a crearla».
+
+## Migraciones de identidad (`SyncForgeAuth`)
+
+Estos comandos solo afectan a la base de usuarios. No los confundas con los de `Infrastructure`; las dos bases tienen historiales `__EFMigrationsHistory` independientes. Al borrar o revertir `SyncForgeAuth` se pierden las cuentas, roles asignados y sesiones, incluido el `SuperAdmin`.
+
+```powershell
+$env:ASPNETCORE_ENVIRONMENT = 'Development'
+dotnet build API/API.csproj -m:1 /nodeReuse:false
+dotnet ef migrations list --context SecurityDbContext --project Security/Security.csproj --startup-project API/API.csproj --no-build
+dotnet ef migrations has-pending-model-changes --context SecurityDbContext --project Security/Security.csproj --startup-project API/API.csproj --no-build
+dotnet ef database update --context SecurityDbContext --project Security/Security.csproj --startup-project API/API.csproj --no-build
+```
+
+Para volver a crear **solo** la base de identidad, detén la API, revisa la base indicada por `--dry-run` y ejecuta cada línea por separado:
+
+```powershell
+dotnet ef database drop --dry-run --context SecurityDbContext --project Security/Security.csproj --startup-project API/API.csproj --no-build
+dotnet ef database drop --context SecurityDbContext --project Security/Security.csproj --startup-project API/API.csproj --no-build
+dotnet ef database update --context SecurityDbContext --project Security/Security.csproj --startup-project API/API.csproj --no-build
+```
+
+Después del borrado tendrás que crear de nuevo el primer `SuperAdmin` con `dotnet run --project API/API.csproj --launch-profile https -- --bootstrap-superadmin`. Para revertir todas las tablas de identidad conservando la base vacía, usa:
+
+```powershell
+dotnet ef database update 0 --context SecurityDbContext --project Security/Security.csproj --startup-project API/API.csproj --no-build
+```
+
+Tras modificar las entidades de seguridad, crea y aplica una nueva migración únicamente en `Security`:
+
+```powershell
+dotnet build API/API.csproj -m:1 /nodeReuse:false
+dotnet ef migrations add NombreDelCambio --context SecurityDbContext --project Security/Security.csproj --startup-project API/API.csproj --no-build --output-dir Migrations
+dotnet build API/API.csproj -m:1 /nodeReuse:false
+dotnet ef database update --context SecurityDbContext --project Security/Security.csproj --startup-project API/API.csproj --no-build
+```
+
+La compilación después de `migrations add` es necesaria cuando se usa `--no-build`: permite a EF cargar la nueva migración antes de ejecutar `database update`.

@@ -1,49 +1,119 @@
 @host = http://localhost:5254
+@token = PASTE_ACCESS_TOKEN_HERE
 @language = es
 @jobId = 1
 @orderId = 1
 @fileId = 00000000-0000-0000-0000-000000000000
 
+### Iniciar sesión (la única llamada anónima)
+POST {{host}}/api/auth/login?language={{language}}
+Content-Type: application/json
+
+{
+  "email": "tu@correo.com",
+  "password": "tu-contraseña"
+}
+
+### Usuario autenticado
+GET {{host}}/api/auth/me?language={{language}}
+Authorization: Bearer {{token}}
+
+### Cerrar sesión y revocar el token
+POST {{host}}/api/auth/logout?language={{language}}
+Authorization: Bearer {{token}}
+
+### Listar usuarios (SuperAdmin)
+GET {{host}}/api/users?language={{language}}
+Authorization: Bearer {{token}}
+
+### Crear usuario (SuperAdmin)
+POST {{host}}/api/users?language={{language}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "email": "usuario@example.com",
+  "displayName": "Usuario de ejemplo",
+  "password": "CambiaEstaClave!2026",
+  "role": "User"
+}
+
+### Cambiar rol (SuperAdmin; sustituir el GUID)
+PATCH {{host}}/api/users/00000000-0000-0000-0000-000000000000/role?language={{language}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{"role":"Admin"}
+
+### Desactivar usuario (SuperAdmin; sustituir el GUID)
+PATCH {{host}}/api/users/00000000-0000-0000-0000-000000000000/status?language={{language}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{"isActive":false}
+
 ### Estado del backend y SQL Server
 GET {{host}}/api/health
+Authorization: Bearer {{token}}
 
 ### Listar archivos
 GET {{host}}/api/files?language={{language}}
+Authorization: Bearer {{token}}
 
 ### Consultar un archivo
 GET {{host}}/api/files/{{fileId}}?language={{language}}
+Authorization: Bearer {{token}}
 
 ### Consultar resultado tras completar el procesamiento
 GET {{host}}/api/files/{{fileId}}/result?language={{language}}
+Authorization: Bearer {{token}}
 
 ### Volver a procesar un archivo terminado
 POST {{host}}/api/files/{{fileId}}/reprocess?language={{language}}
+Authorization: Bearer {{token}}
+
+### Renombrar un archivo guardado (conserva la extensión)
+PATCH {{host}}/api/files/{{fileId}}/name?language={{language}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "fileName": "archivo-renombrado.csv"
+}
 
 ### Eliminar un archivo
 DELETE {{host}}/api/files/{{fileId}}?language={{language}}
+Authorization: Bearer {{token}}
 
 ### Mover un archivo a la papelera (alternativa al DELETE anterior)
 POST {{host}}/api/trash-can/{{fileId}}?language={{language}}
+Authorization: Bearer {{token}}
 
 ### Listar papelera
 GET {{host}}/api/trash-can?language={{language}}
+Authorization: Bearer {{token}}
 
 ### Consultar archivo de la papelera
 GET {{host}}/api/trash-can/{{fileId}}?language={{language}}
+Authorization: Bearer {{token}}
 
 ### Consultar resultado de un archivo de la papelera
 GET {{host}}/api/trash-can/{{fileId}}/result?language={{language}}
+Authorization: Bearer {{token}}
 
 ### Restaurar antes de los 30 días
 POST {{host}}/api/trash-can/{{fileId}}/restore?language={{language}}
+Authorization: Bearer {{token}}
 
 ### Borrado definitivo inmediato
 DELETE {{host}}/api/trash-can/{{fileId}}?language={{language}}
+Authorization: Bearer {{token}}
 
 ### Subir un archivo: usar curl.exe -F "file=@C:\\ruta\\archivo.csv" http://localhost:5254/api/files
 
 ### Crear un trabajo de importación
 POST {{host}}/api/import-jobs?language={{language}}
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
@@ -55,15 +125,19 @@ Content-Type: application/json
 
 ### Listar trabajos
 GET {{host}}/api/import-jobs?skip=0&take=50&language={{language}}
+Authorization: Bearer {{token}}
 
 ### Consultar un trabajo
 GET {{host}}/api/import-jobs/{{jobId}}?language={{language}}
+Authorization: Bearer {{token}}
 
 ### Iniciar un intento
 POST {{host}}/api/import-jobs/{{jobId}}/start?language={{language}}
+Authorization: Bearer {{token}}
 
 ### Guardar un pedido durante el procesamiento
 POST {{host}}/api/orders?language={{language}}
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
@@ -77,18 +151,23 @@ Content-Type: application/json
 
 ### Consultar un pedido
 GET {{host}}/api/orders/{{orderId}}?language={{language}}
+Authorization: Bearer {{token}}
 
 ### Consultar por identificador de origen
 GET {{host}}/api/orders/by-source?sourceSystem=shop&externalId=ORDER-001&language={{language}}
+Authorization: Bearer {{token}}
 
 ### Listar pedidos de un trabajo
 GET {{host}}/api/orders?importJobId={{jobId}}&skip=0&take=50&language={{language}}
+Authorization: Bearer {{token}}
 
 ### Completar el trabajo
 POST {{host}}/api/import-jobs/{{jobId}}/complete?language={{language}}
+Authorization: Bearer {{token}}
 
 ### Marcar un intento como fallido (alternativa a completar)
 POST {{host}}/api/import-jobs/{{jobId}}/fail?language={{language}}
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
@@ -97,3 +176,4 @@ Content-Type: application/json
 
 ### Preparar un reintento después de fallar
 POST {{host}}/api/import-jobs/{{jobId}}/retry?language={{language}}
+Authorization: Bearer {{token}}

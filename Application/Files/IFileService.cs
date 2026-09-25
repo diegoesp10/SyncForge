@@ -9,5 +9,6 @@ public interface IFileService
     Task<FileItemResponse> GetAsync(Guid id, string language, CancellationToken cancellationToken = default);
     Task<FileResultResponse> GetResultAsync(Guid id, string language, CancellationToken cancellationToken = default);
     Task<FileItemResponse> ReprocessAsync(Guid id, string language, CancellationToken cancellationToken = default);
+    Task<FileItemResponse> RenameAsync(Guid id, string? fileName, string language, CancellationToken cancellationToken = default);
     Task DeleteAsync(Guid id, string language, CancellationToken cancellationToken = default);
 }

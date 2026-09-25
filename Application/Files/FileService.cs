@@ -57,6 +57,14 @@ public sealed class FileService(IFileRepository repository, IFileStorage storage
         return file.ToResponse(language);
     }
 
+    public async Task<FileItemResponse> RenameAsync(Guid id, string? fileName, string language, CancellationToken cancellationToken = default)
+    {
+        var file = await RequireAsync(id, language, cancellationToken);
+        file.Rename(fileName, language);
+        await repository.SaveChangesAsync(cancellationToken);
+        return file.ToResponse(language);
+    }
+
     public async Task DeleteAsync(Guid id, string language, CancellationToken cancellationToken = default) =>
         await trashCan.MoveToTrashCanAsync(id, language, cancellationToken);
 

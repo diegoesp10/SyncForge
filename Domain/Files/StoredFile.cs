@@ -84,6 +84,27 @@ public sealed class StoredFile
         Version = Guid.NewGuid();
     }
 
+    public void Rename(string? fileName, string language)
+    {
+        var name = DomainValidation.Required(fileName, nameof(fileName), 260, language);
+        if (name is "." or ".." || name.EndsWith('.') || name.Any(character =>
+                char.IsControl(character) || character is '<' or '>' or ':' or '"' or '/' or '\\' or '|' or '?' or '*'))
+            throw new ArgumentException(ErrorMessages.Get(ErrorCode.InvalidFileName, language), nameof(fileName));
+
+        var extension = Path.GetExtension(name);
+        if (string.IsNullOrWhiteSpace(name[..^extension.Length].Trim('.')))
+            throw new ArgumentException(ErrorMessages.Get(ErrorCode.InvalidFileName, language), nameof(fileName));
+        if (!extension.Equals(Path.GetExtension(FileName), StringComparison.OrdinalIgnoreCase))
+            throw new ArgumentException(ErrorMessages.Get(ErrorCode.FileExtensionCannotChange, language), nameof(fileName));
+        if (Status == FileStatus.Processing)
+            throw new InvalidOperationException(ErrorMessages.Get(ErrorCode.InvalidFileTransition, language));
+        if (name == FileName)
+            return;
+
+        FileName = name;
+        Version = Guid.NewGuid();
+    }
+
     public void RecoverInterrupted()
     {
         if (Status != FileStatus.Processing)

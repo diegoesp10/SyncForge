@@ -4,5 +4,6 @@
   <Project Path="Contracts\Contracts.csproj" />
   <Project Path="Domain\Domain.csproj" />
   <Project Path="Infrastructure\Infrastructure.csproj" />
+  <Project Path="Security\Security.csproj" />
   <Project Path="Tests/Tests.csproj" Id="846b33a0-94ad-4456-8eb7-e484c9bd3885" />
 </Solution>

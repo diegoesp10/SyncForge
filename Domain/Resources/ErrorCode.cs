@@ -27,6 +27,8 @@ public enum ErrorCode
     FileTooLarge,
     PayloadTooLargeTitle,
     FileNotFound,
+    InvalidFileName,
+    FileExtensionCannotChange,
     FileResultUnavailable,
     InvalidFileTransition,
     UnsupportedFileFormat,

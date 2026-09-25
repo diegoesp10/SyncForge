@@ -6,7 +6,9 @@ using Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.OpenApi;
 using Scalar.AspNetCore;
+using Security;
 
 namespace API;
 
@@ -22,6 +24,7 @@ public sealed class Startup(IConfiguration configuration, IWebHostEnvironment en
             ? storagePath
             : Path.Combine(environment.ContentRootPath, storagePath);
         services.AddInfrastructure(connectionString ?? string.Empty, "en", storageRoot);
+        services.AddSecurity(configuration);
         services.AddControllers(options => options.Filters.Add<ApiExceptionFilter>());
         services.Configure<ApiBehaviorOptions>(options =>
         {
@@ -36,7 +39,26 @@ public sealed class Startup(IConfiguration configuration, IWebHostEnvironment en
                 });
             };
         });
-        services.AddOpenApi();
+        services.AddOpenApi(options => options.AddDocumentTransformer((document, _, _) =>
+        {
+            document.Components ??= new OpenApiComponents();
+            document.Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
+            document.Components.SecuritySchemes["Bearer"] = new OpenApiSecurityScheme
+            {
+                Type = SecuritySchemeType.Http,
+                Scheme = "bearer",
+                BearerFormat = "JWT"
+            };
+            document.Security ??= [];
+            document.Security.Add(new OpenApiSecurityRequirement
+            {
+                [new OpenApiSecuritySchemeReference("Bearer", document)] = []
+            });
+            if (document.Paths.TryGetValue("/api/auth/login", out var login) && login?.Operations is { } loginOperations)
+                foreach (var operation in loginOperations.Values)
+                    operation.Security = [];
+            return Task.CompletedTask;
+        }));
         services.Configure<FormOptions>(options =>
             options.MultipartBodyLengthLimit = FileService.MaxFileSizeBytes + 1024 * 1024);
         services.Configure<KestrelServerOptions>(options =>
@@ -47,12 +69,19 @@ public sealed class Startup(IConfiguration configuration, IWebHostEnvironment en
     {
         if (app.Environment.IsDevelopment())
         {
-            app.MapOpenApi();
-            app.MapScalarApiReference("/api-docs", options => options.WithTitle("SyncForge API"));
+            app.MapOpenApi().AllowAnonymous();
+            app.MapScalarApiReference("/api-docs", options => options.WithTitle("SyncForge API")).AllowAnonymous();
         }
         else
+        {
+            app.UseHsts();
             app.UseHttpsRedirection();
+        }
 
+        app.UseRouting();
+        app.UseRateLimiter();
+        app.UseAuthentication();
+        app.UseAuthorization();
         app.MapControllers();
     }
 }

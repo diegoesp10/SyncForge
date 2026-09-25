@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="InvalidCredentials" xml:space="preserve"><value>Credenciales no válidas.</value></data>
+  <data name="InvalidUserRequest" xml:space="preserve"><value>Los datos del usuario no son válidos.</value></data>
+  <data name="PasswordPolicyViolation" xml:space="preserve"><value>La contraseña debe tener al menos 12 caracteres e incluir mayúsculas, minúsculas, un número y un símbolo.</value></data>
+  <data name="UserAlreadyExists" xml:space="preserve"><value>Ya existe un usuario con ese correo.</value></data>
+  <data name="UserNotFound" xml:space="preserve"><value>No se encontró el usuario.</value></data>
+  <data name="InvalidRole" xml:space="preserve"><value>El rol debe ser User o Admin. SuperAdmin está reservado para el propietario inicial.</value></data>
+  <data name="SuperAdminAlreadyExists" xml:space="preserve"><value>Ya existe un SuperAdmin.</value></data>
+  <data name="AuthenticationRequired" xml:space="preserve"><value>Se necesita un token Bearer válido.</value></data>
+  <data name="AccessDenied" xml:space="preserve"><value>No tienes permiso para realizar esta acción.</value></data>
+  <data name="SecurityDatabaseNotReady" xml:space="preserve"><value>Debes aplicar la migración de la base de seguridad antes de crear el SuperAdmin inicial.</value></data>
+  <data name="SecurityConfigurationMissing" xml:space="preserve"><value>Se necesita la conexión a la base de seguridad y una clave privada de firma de al menos 256 bits.</value></data>
+  <data name="TooManyLoginAttempts" xml:space="preserve"><value>Demasiados intentos de acceso. Vuelve a intentarlo más tarde.</value></data>
+  <data name="InteractiveTerminalRequired" xml:space="preserve"><value>Se necesita una terminal interactiva para introducir de forma segura la contraseña inicial del SuperAdmin.</value></data>
+  <data name="PasswordsDoNotMatch" xml:space="preserve"><value>Las contraseñas no coinciden.</value></data>
+</root>

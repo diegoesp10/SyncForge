@@ -29,6 +29,8 @@
   <data name="FileTooLarge" xml:space="preserve"><value>El archivo supera el límite de {0} MB.</value></data>
   <data name="PayloadTooLargeTitle" xml:space="preserve"><value>Archivo demasiado grande</value></data>
   <data name="FileNotFound" xml:space="preserve"><value>No se encontró el archivo {0}.</value></data>
+  <data name="InvalidFileName" xml:space="preserve"><value>El nombre del archivo contiene caracteres no válidos o no tiene nombre antes de la extensión.</value></data>
+  <data name="FileExtensionCannotChange" xml:space="preserve"><value>No se puede cambiar la extensión al renombrar el archivo.</value></data>
   <data name="FileResultUnavailable" xml:space="preserve"><value>El resultado del archivo {0} todavía no está disponible.</value></data>
   <data name="InvalidFileTransition" xml:space="preserve"><value>No se puede modificar el archivo en su estado actual.</value></data>
   <data name="UnsupportedFileFormat" xml:space="preserve"><value>El formato del archivo no es compatible: {0}.</value></data>

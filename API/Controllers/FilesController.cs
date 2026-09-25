@@ -42,6 +42,12 @@ public sealed class FilesController(IFileService service) : ControllerBase
         Guid id, [FromQuery] string? language = null, CancellationToken cancellationToken = default) =>
         service.ReprocessAsync(id, ApiLanguage.Resolve(HttpContext, language), cancellationToken);
 
+    [HttpPatch("{id:guid}/name")]
+    public Task<FileItemResponse> Rename(
+        Guid id, [FromBody] RenameFileRequest request,
+        [FromQuery] string? language = null, CancellationToken cancellationToken = default) =>
+        service.RenameAsync(id, request.FileName, ApiLanguage.Resolve(HttpContext, language), cancellationToken);
+
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(
         Guid id, [FromQuery] string? language = null, CancellationToken cancellationToken = default)

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Security.Resources;
 
 namespace API.Errors;
 
@@ -12,6 +13,20 @@ public sealed class ApiExceptionFilter : IExceptionFilter
     public void OnException(ExceptionContext context)
     {
         var exception = context.Exception;
+        if (exception is SecurityOperationException securityException)
+        {
+            var message = SecurityErrorMessages.Get(securityException.Code, ApiLanguage.Resolve(context.HttpContext));
+            var problem = new ProblemDetails
+            {
+                Status = securityException.StatusCode,
+                Title = message,
+                Detail = message
+            };
+            problem.Extensions["code"] = securityException.Code.ToString();
+            context.Result = new ObjectResult(problem) { StatusCode = securityException.StatusCode };
+            context.ExceptionHandled = true;
+            return;
+        }
         var status = exception switch
         {
             FileTooLargeException => StatusCodes.Status413PayloadTooLarge,
